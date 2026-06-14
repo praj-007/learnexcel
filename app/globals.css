@@ -97,10 +97,52 @@ body {
 }
 
 .data-table-container {
-  max-height: 420px;
   overflow: auto;
   border: 1px solid #E2E8F0;
   border-radius: 8px;
+  flex: 1;
+  min-height: 380px;
+}
+
+/* Make the playground sheet dominate the space */
+.playground-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 680px;
+}
+
+.playground-main {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0; /* important for flex children with overflow */
+}
+
+.playground-table-area {
+  flex: 1;
+  min-height: 480px;
+  display: flex;
+  flex-direction: column;
+}
+
+.playground-table-area .data-table-container {
+  flex: 1;
+  min-height: 440px;
+  max-height: none; /* let flex control it */
+}
+
+/* Focus mode makes the sheet huge */
+.full-playground .playground-card {
+  min-height: 82vh;
+  border-radius: 0;
+}
+
+.full-playground .playground-table-area {
+  min-height: 520px;
+}
+
+.full-playground .data-table-container {
+  min-height: 480px;
 }
 
 .section-header {

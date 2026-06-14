@@ -1,42 +1,34 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Hero from '../components/Hero';
 import StatsBar from '../components/StatsBar';
 import WhyExcel from '../components/WhyExcel';
 import Curriculum from '../components/Curriculum';
 import InteractiveExamples from '../components/InteractiveExamples';
-import Quizzes from '../components/Quizzes';
 import FormulaLab from '../components/FormulaLab';
 import Playground from '../components/Playground';
-import LessonModal from '../components/LessonModal';
 import PlanModal from '../components/PlanModal';
-import { DatasetKey } from '../lib/types';
+import { DatasetKey, LessonScenario } from '../lib/types';
+import { lessonData } from '../lib/lessonData';
 
 export default function LearnExcelPage() {
-  const [lessonIndex, setLessonIndex] = useState<number | null>(null);
   const [showPlan, setShowPlan] = useState(false);
   const [pendingGuided, setPendingGuided] = useState<string | null>(null);
 
-  const openLesson = (idx: number) => setLessonIndex(idx);
-  const closeLesson = () => setLessonIndex(null);
-
   const handleTryFormula = (formula: string, ds?: DatasetKey) => {
-    // Scroll to playground and prefill
     const pg = document.getElementById('playground');
     pg?.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
-    // After scroll, update the playground via custom event or direct (simple approach: set on window for Playground to pick)
     setTimeout(() => {
       const input = document.getElementById('formulaInput') as HTMLInputElement;
       if (input) {
         input.value = formula;
-        // Trigger evaluation by dispatching input + Enter simulation
         input.dispatchEvent(new Event('input', { bubbles: true }));
         setTimeout(() => {
           const evalBtn = input.parentElement?.querySelector('button');
-          evalBtn?.click();
+          if (evalBtn) evalBtn.click();
         }, 120);
       }
     }, 850);
@@ -46,12 +38,9 @@ export default function LearnExcelPage() {
     const pg = document.getElementById('playground');
     pg?.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
-    // The Playground has focusFormulaPractice behavior built-in via quick examples.
-    // We enhance by also preloading a sensible formula in the bar after switch happens internally.
     setTimeout(() => {
       const input = document.getElementById('formulaInput') as HTMLInputElement;
       if (input) {
-        // Map a few good starters
         const starters: Record<string, string> = {
           SUMIF: '=SUMIF(A2:A15,"North",F2:F15)',
           COUNTIFS: '=COUNTIFS(A2:A15,"East",B2:B15,"Laptop")',
@@ -71,11 +60,58 @@ export default function LearnExcelPage() {
   };
 
   const handleStartGuided = (type: string) => {
-    // Pass to Playground via state
     setPendingGuided(type);
     const pg = document.getElementById('playground');
     pg?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   };
+
+  // Support loading scenarios from lesson pages via URL (e.g. /?loadScenario=01-s1)
+  const handleLoadScenario = (scenario: LessonScenario) => {
+    const pg = document.getElementById('playground');
+    pg?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    setTimeout(() => {
+      handleTryFormula(scenario.formula, scenario.dataset);
+      
+      setTimeout(() => {
+        const toast = document.createElement('div');
+        toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translate(-50%,0);background:#0F172A;color:white;padding:12px 20px;border-radius:9999px;font-size:13px;z-index:99999;max-width:620px;box-shadow:0 10px 15px -3px rgb(0 0 0 / 0.2)';
+        toast.innerHTML = `
+          <div style="font-weight:600;margin-bottom:4px">Scenario thinking:</div>
+          <div style="opacity:0.9">${scenario.thinking.join(' → ')}</div>
+        `;
+        document.body.appendChild(toast);
+        setTimeout(() => {
+          toast.style.transition = 'all 0.35s ease';
+          toast.style.opacity = '0';
+          setTimeout(() => toast.remove(), 300);
+        }, 6200);
+      }, 900);
+    }, 650);
+  };
+
+  // Auto-load scenario if URL has ?loadScenario=01-s1 (from lesson pages) - pure client side
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const loadScenarioParam = urlParams.get('loadScenario');
+      
+      if (loadScenarioParam) {
+        for (const lesson of lessonData) {
+          const found = lesson.scenarios?.find(s => s.id === loadScenarioParam);
+          if (found) {
+            // Clean the URL
+            const url = new URL(window.location.href);
+            url.searchParams.delete('loadScenario');
+            window.history.replaceState({}, '', url.toString());
+            
+            handleLoadScenario(found);
+            break;
+          }
+        }
+      }
+    }
+  }, []);
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -86,11 +122,9 @@ export default function LearnExcelPage() {
 
       <WhyExcel />
 
-      <Curriculum onOpenLesson={openLesson} />
+      <Curriculum />
 
       <InteractiveExamples />
-
-      <Quizzes />
 
       <FormulaLab 
         onFocusFormula={handleFocusFormula} 
@@ -117,11 +151,7 @@ export default function LearnExcelPage() {
       </footer>
 
       {/* Modals */}
-      <LessonModal 
-        index={lessonIndex} 
-        onClose={closeLesson} 
-        onTryFormula={handleTryFormula} 
-      />
+      {/* Lesson content moved to dedicated /lesson/[id] pages for focused reading */}
       {showPlan && <PlanModal onClose={() => setShowPlan(false)} />}
     </div>
   );
