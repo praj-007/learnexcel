@@ -17,6 +17,7 @@ export default function Playground({ onStartGuidedFromOutside, clearOutsideTrigg
   const [formula, setFormula] = useState('=SUM(F2:F15)');
   const [result, setResult] = useState<string | number>('—');
   const [error, setError] = useState<string>('');
+  const [dataChanged, setDataChanged] = useState(false);
   const [isFocusMode, setIsFocusMode] = useState(false);
   const [originalDisplays, setOriginalDisplays] = useState<Record<string, string>>({});
 
@@ -40,6 +41,7 @@ export default function Playground({ onStartGuidedFromOutside, clearOutsideTrigg
       const res = evaluateFormula('=SUM(F2:F15)', initial);
       setResult(res.result);
       setError(res.error || '');
+      setDataChanged(false);
     }, 600);
 
     // Initial example calculations (handled in parent examples too)
@@ -51,6 +53,7 @@ export default function Playground({ onStartGuidedFromOutside, clearOutsideTrigg
     setCurrentData(copy);
     setResult('—');
     setError('');
+    setDataChanged(false);
     setFormula('');
     setSelectedExample(null);
   };
@@ -60,6 +63,7 @@ export default function Playground({ onStartGuidedFromOutside, clearOutsideTrigg
     const copy = JSON.parse(JSON.stringify(datasets[currentKey]));
     setCurrentData(copy);
     setResult('—');
+    setDataChanged(false);
   };
 
   const exportCSV = () => {
@@ -89,9 +93,10 @@ export default function Playground({ onStartGuidedFromOutside, clearOutsideTrigg
     copy.rows[rowIdx][colIdx] = val;
     setCurrentData(copy);
 
-    // Hint to re-eval
+    // Mark that data has changed so user knows to re-evaluate
+    // (only if we currently have a result showing)
     if (result !== '—' && result !== '') {
-      setResult(String(result) + ' (data changed)');
+      setDataChanged(true);
     }
   };
 
@@ -101,6 +106,7 @@ export default function Playground({ onStartGuidedFromOutside, clearOutsideTrigg
     const res = evaluateFormula(toEval, currentData);
     setResult(res.result);
     setError(res.error || '');
+    setDataChanged(false);   // fresh result, clear the "data changed" hint
   }, [formula, currentData]);
 
   const handleFormulaKey = (e: React.KeyboardEvent) => {
@@ -300,7 +306,7 @@ export default function Playground({ onStartGuidedFromOutside, clearOutsideTrigg
           <div className="flex items-center gap-x-2 flex-shrink-0">
             <button 
               onClick={() => setSidebarOpen(!sidebarOpen)} 
-              className="text-xs px-3 h-8 flex items-center gap-x-1.5 border border-slate-300 hover:bg-white rounded-2xl text-slate-600 transition-colors"
+              className="hidden lg:flex text-xs px-3 h-8 items-center gap-x-1.5 border border-slate-300 hover:bg-white rounded-2xl text-slate-600 transition-colors"
               title={sidebarOpen ? "Hide sidebar for bigger sheet" : "Show examples sidebar"}
             >
               {sidebarOpen ? '⤵ Hide examples' : '⤴ Show examples'}
@@ -340,6 +346,9 @@ export default function Playground({ onStartGuidedFromOutside, clearOutsideTrigg
             <div className="text-[10px] uppercase tracking-widest opacity-60">Result</div>
             <div className="playground-result text-emerald-400 font-mono text-xl min-w-[110px] text-right leading-none">
               {error ? <span className="text-rose-400 text-base">Error</span> : formatResult(result)}
+              {dataChanged && (
+                <span className="text-xs align-super ml-1 text-amber-400">(data changed)</span>
+              )}
             </div>
           </div>
         </div>
@@ -347,6 +356,44 @@ export default function Playground({ onStartGuidedFromOutside, clearOutsideTrigg
         {error && (
           <div className="px-4 py-1 text-xs text-rose-500 bg-rose-50 border-b">{error}</div>
         )}
+
+        {/* Quick Examples - Mobile friendly (horizontal scroll) */}
+        <div className="lg:hidden mb-4">
+          <div className="flex items-center justify-between mb-1.5 px-1">
+            <div className="text-xs font-semibold text-slate-500 tracking-wider">QUICK EXAMPLES</div>
+            <div className="text-[10px] text-teal-600">Tap to load</div>
+          </div>
+          <div className="flex gap-2 overflow-x-auto pb-2 -mx-1 px-1 snap-x snap-mandatory">
+            {currentExamples.map((ex, i) => {
+              const isActive = selectedExample?.formula === ex.formula;
+              return (
+                <div
+                  key={i}
+                  onClick={() => loadQuickExample(ex)}
+                  className={`snap-start flex-shrink-0 px-3 py-2 text-xs border rounded-2xl cursor-pointer whitespace-nowrap transition-all min-w-[140px] ${isActive 
+                    ? 'border-teal-500 bg-teal-50' 
+                    : 'bg-white border-slate-200 hover:border-teal-300 active:bg-teal-50'}`}
+                >
+                  <div className="font-medium text-slate-700 leading-tight">{ex.label}</div>
+                  <div className="text-[9px] text-teal-600/70 mt-0.5">{ex.func}</div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Mobile: show thinking for selected quick example right below the chips */}
+          {selectedExample && (
+            <div className="lg:hidden mb-4 p-3 bg-teal-50 border border-teal-200 rounded-2xl text-xs">
+              <div className="font-semibold text-teal-700 mb-1">Step-by-step thinking:</div>
+              {selectedExample.thinking.map((step, i) => (
+                <div key={i} className="flex gap-1.5 mb-0.5 leading-snug">
+                  <span className="font-mono text-teal-600 shrink-0">{i + 1}.</span>
+                  <span>{step}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
 
         {/* Main content area - table takes MAX space */}
         <div className="playground-main flex-1 p-3 md:p-4 min-h-0">

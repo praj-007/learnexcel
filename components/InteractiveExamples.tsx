@@ -63,22 +63,32 @@ export default function InteractiveExamples() {
     <div id="examples" className="max-w-screen-2xl mx-auto px-8 py-16">
       <div className="max-w-screen-xl mx-auto">
         <div className="mb-8">
-          <span className="text-teal-600 text-sm font-bold tracking-widest">LEARN BY DOING</span>
-          <h2 className="section-header tracking-tighter">Interactive Business Examples</h2>
-          <p className="text-slate-600 mt-2 max-w-md">Real scenarios MBA students face. Edit the data or parameters and see formulas update live.</p>
+          <span className="text-teal-600 text-sm font-bold tracking-widest">REAL BUSINESS QUESTIONS</span>
+          <h2 className="section-header tracking-tighter">See the Thinking in Action</h2>
+          <p className="text-slate-600 mt-2 max-w-lg">
+            These are the exact kinds of questions you'll face in cases, internships, and your first job. 
+            Watch how the right formula turns a vague request into a clear answer.
+          </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Regional */}
-          <div className="bg-white border border-slate-200 rounded-3xl p-6">
-            <div className="flex items-center justify-between mb-4">
+          {/* Regional Revenue - SUMIF / AVERAGEIF */}
+          <div className="bg-white border border-slate-200 rounded-3xl p-6 flex flex-col">
+            <div className="flex items-center justify-between mb-3">
               <span className="text-xs font-bold px-2.5 py-1 bg-amber-100 text-amber-700 rounded">MARKETING</span>
               <span className="text-xs text-slate-400">SUMIF • AVERAGEIF</span>
             </div>
-            <h5 className="font-semibold text-lg">Regional Revenue Analysis</h5>
-            <p className="text-xs text-slate-500 mt-1 mb-4">Calculate total and average revenue by region from the sales dataset.</p>
 
-            <div className="bg-slate-50 rounded-2xl p-4 mb-4">
+            <div className="mb-4">
+              <div className="font-semibold text-lg leading-tight">Your manager says:</div>
+              <div className="mt-1 text-[15px] font-medium italic text-slate-700">
+                “Give me total revenue and average deal size for only the North region.”
+              </div>
+            </div>
+
+            <div className="text-xs text-slate-500 mb-3">What formula would you reach for?</div>
+
+            <div className="bg-slate-50 rounded-2xl p-4 mb-4 flex-1">
               <div className="flex justify-between text-xs mb-2">
                 <div><span className="font-medium">Select Region:</span></div>
                 <select 
@@ -100,25 +110,45 @@ export default function InteractiveExamples() {
                 </div>
               </div>
             </div>
-            <button onClick={() => calculateRegional(region)} className="w-full py-2 text-sm font-semibold bg-teal-600 text-white rounded-2xl hover:bg-teal-700 transition-colors">
-              Calculate with Current Data
-            </button>
-            <div className="mt-3 text-[10px] text-center text-slate-400">Formula used: =SUMIF(RegionCol, selectedRegion, RevenueCol)</div>
+
+            <div className="mt-auto">
+              <div className="text-[10px] font-medium text-teal-700 mb-1">The formula:</div>
+              <div className="font-mono text-sm bg-slate-900 text-emerald-300 px-3 py-2 rounded-xl mb-2">
+                =SUMIF(Region, "North", Revenue)
+              </div>
+              <div className="text-xs text-slate-600 mb-3">
+                One condition (Region = North) → use the single-criteria IF version. 
+                This is the exact pattern taught in Module 1.
+              </div>
+              <button 
+                onClick={() => document.getElementById('curriculum')?.scrollIntoView({ behavior: 'smooth' })}
+                className="w-full py-2 text-sm font-semibold border border-teal-200 hover:bg-teal-50 text-teal-700 rounded-2xl transition-colors"
+              >
+                See the full thinking in Lesson 1 →
+              </button>
+            </div>
           </div>
 
-          {/* NPV */}
-          <div className="bg-white border border-slate-200 rounded-3xl p-6">
-            <div className="flex items-center justify-between mb-4">
+          {/* Project NPV - Financial Modeling */}
+          <div className="bg-white border border-slate-200 rounded-3xl p-6 flex flex-col">
+            <div className="flex items-center justify-between mb-3">
               <span className="text-xs font-bold px-2.5 py-1 bg-blue-100 text-blue-700 rounded">FINANCE</span>
               <span className="text-xs text-slate-400">NPV • IRR</span>
             </div>
-            <h5 className="font-semibold text-lg">Project NPV Calculator</h5>
-            <p className="text-xs text-slate-500 mt-1 mb-4">Adjust discount rate and see how it impacts project viability (5-year cash flows).</p>
 
-            <div className="space-y-4">
+            <div className="mb-4">
+              <div className="font-semibold text-lg leading-tight">Your PE case asks:</div>
+              <div className="mt-1 text-[15px] font-medium italic text-slate-700">
+                “Is this $500k investment worth it at a 12% hurdle rate?”
+              </div>
+            </div>
+
+            <div className="text-xs text-slate-500 mb-3">How sensitive is the answer to your discount rate assumption?</div>
+
+            <div className="space-y-4 flex-1">
               <div>
                 <label className="text-xs font-medium text-slate-500">Discount Rate (%)</label>
-                <div className="flex items-center gap-x-3">
+                <div className="flex items-center gap-x-3 mt-1">
                   <input 
                     type="range" min="5" max="25" step="0.5" value={discountRate} 
                     onChange={(e) => calculateNPV(parseFloat(e.target.value))}
@@ -137,22 +167,42 @@ export default function InteractiveExamples() {
                     ${npv.toLocaleString()}
                   </div>
                 </div>
-                <div className="text-[10px] mt-1 opacity-50">Initial outlay: $500,000 • Positive = Value creating project</div>
+                <div className="text-[10px] mt-1 opacity-60">
+                  {npv > 0 ? "Positive → the project creates value at this rate" : "Negative → the project destroys value"}
+                </div>
               </div>
             </div>
-            <button onClick={() => calculateNPV(discountRate)} className="mt-4 w-full py-2 text-sm font-semibold border border-slate-300 hover:bg-slate-50 rounded-2xl transition-colors">Recalculate NPV</button>
+
+            <div className="mt-4">
+              <div className="text-xs text-slate-600 mb-2">
+                NPV tells you whether future cash flows are worth more than the initial investment when discounted at your required return.
+              </div>
+              <button 
+                onClick={() => document.getElementById('curriculum')?.scrollIntoView({ behavior: 'smooth' })}
+                className="w-full py-2 text-sm font-semibold border border-blue-200 hover:bg-blue-50 text-blue-700 rounded-2xl transition-colors"
+              >
+                Master NPV &amp; IRR in Module 3 →
+              </button>
+            </div>
           </div>
 
-          {/* HR */}
-          <div className="bg-white border border-slate-200 rounded-3xl p-6">
-            <div className="flex items-center justify-between mb-4">
+          {/* HR Analytics - Multi-condition */}
+          <div className="bg-white border border-slate-200 rounded-3xl p-6 flex flex-col">
+            <div className="flex items-center justify-between mb-3">
               <span className="text-xs font-bold px-2.5 py-1 bg-violet-100 text-violet-700 rounded">HR / OB</span>
-              <span className="text-xs text-slate-400">COUNTIF • AVERAGEIFS</span>
+              <span className="text-xs text-slate-400">COUNTIFS • AVERAGEIFS</span>
             </div>
-            <h5 className="font-semibold text-lg">Talent &amp; Compensation Insights</h5>
-            <p className="text-xs text-slate-500 mt-1 mb-4">Analyze salary distribution and performance by department.</p>
 
-            <div className="grid grid-cols-3 gap-3 text-center mb-4">
+            <div className="mb-4">
+              <div className="font-semibold text-lg leading-tight">Leadership wants to know:</div>
+              <div className="mt-1 text-[15px] font-medium italic text-slate-700">
+                “What’s the average salary in Finance, and how many high performers do we have across departments?”
+              </div>
+            </div>
+
+            <div className="text-xs text-slate-500 mb-3">This requires filtering on multiple dimensions at once.</div>
+
+            <div className="grid grid-cols-3 gap-3 text-center mb-4 flex-1 content-start">
               <div className="bg-slate-50 rounded-2xl p-3">
                 <div className="text-xs text-slate-500">Avg Salary (Finance)</div>
                 <div className="font-mono text-lg font-semibold">${hrAvg.toLocaleString()}</div>
@@ -166,8 +216,24 @@ export default function InteractiveExamples() {
                 <div className="font-mono text-lg font-semibold text-rose-600">{hrAttr}%</div>
               </div>
             </div>
-            <button onClick={calculateHR} className="w-full py-2 text-sm font-semibold bg-violet-600 text-white rounded-2xl hover:bg-violet-700 transition-colors">Refresh HR Metrics</button>
+
+            <div className="mt-auto">
+              <div className="text-xs text-slate-600 mb-2">
+                One condition? Use COUNTIF / AVERAGEIF.<br />
+                Multiple conditions at the same time? You need the plural versions (COUNTIFS / AVERAGEIFS).
+              </div>
+              <button 
+                onClick={() => document.getElementById('curriculum')?.scrollIntoView({ behavior: 'smooth' })}
+                className="w-full py-2 text-sm font-semibold border border-violet-200 hover:bg-violet-50 text-violet-700 rounded-2xl transition-colors"
+              >
+                See when to use COUNTIFS vs COUNTIF →
+              </button>
+            </div>
           </div>
+        </div>
+
+        <div className="mt-6 text-center text-xs text-slate-500">
+          These are warm-ups. The real learning happens when you connect the pattern to the full lesson + practice in the Playground.
         </div>
       </div>
     </div>
