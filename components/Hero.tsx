@@ -6,50 +6,36 @@ export default function Hero() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
         <div className="lg:col-span-7">
           <div className="inline-flex items-center gap-x-2 bg-white shadow-sm border border-slate-200 rounded-full px-4 py-1 mb-6">
-            <span className="text-teal-600 text-xs font-bold tracking-[1.5px]">FOR MBA STUDENTS</span>
+            <span className="text-teal-600 text-xs font-bold tracking-[1.5px]">YOUR DAILY EXCEL WORKOUT</span>
           </div>
 
-          <h1 className="font-display text-6xl lg:text-7xl leading-[1.05] tracking-tighter font-semibold">
-            Master Excel.<br />
-            <span className="text-teal-600">Lead with data.</span>
+          <h1 className="font-display text-5xl lg:text-6xl leading-[1.05] tracking-tighter font-semibold">
+            Hey Cad,<br />
+            let's teach you your Excel lesson of today.
           </h1>
 
           <p className="mt-6 max-w-lg text-xl text-slate-600">
-            The interactive dashboard to learn 25+ essential Excel formulas through 
-            real MBA-relevant business data from Finance, Marketing, HR &amp; Operations.
+            What formula would you use if your boss asked: <span className="font-semibold italic">"Show me total revenue only from the North region?"</span><br />
+            Or when should you reach for <span className="font-semibold italic">COUNTIFS</span> instead of COUNTIF?
           </p>
 
           <div className="flex flex-wrap gap-4 mt-8">
             <button
-              onClick={() => document.getElementById('curriculum')?.scrollIntoView({ behavior: 'smooth' })}
+              onClick={() => document.getElementById('examples')?.scrollIntoView({ behavior: 'smooth' })}
               className="px-8 py-3.5 bg-slate-900 hover:bg-black transition-all text-white font-semibold rounded-2xl flex items-center gap-x-3 text-base shadow-lg shadow-slate-900/20"
             >
-              <span>Browse Curriculum</span>
-              <span aria-hidden>→</span>
+              <span>What formula for North region revenue?</span>
             </button>
             <button
               onClick={() => document.getElementById('playground')?.scrollIntoView({ behavior: 'smooth' })}
               className="px-8 py-3.5 bg-white hover:bg-slate-50 border border-slate-300 transition-all font-semibold rounded-2xl flex items-center gap-x-3 text-base"
             >
-              🚀 Launch Playground
+              Let's practice in the sandbox →
             </button>
           </div>
 
-          <div className="flex items-center gap-x-8 mt-10">
-            <div className="flex -space-x-2">
-              <div className="w-8 h-8 bg-slate-200 border border-white rounded-full overflow-hidden ring-1 ring-slate-200">
-                <img src="https://i.pravatar.cc/32?img=28" alt="" className="w-full h-full object-cover" />
-              </div>
-              <div className="w-8 h-8 bg-slate-200 border border-white rounded-full overflow-hidden ring-1 ring-slate-200">
-                <img src="https://i.pravatar.cc/32?img=32" alt="" className="w-full h-full object-cover" />
-              </div>
-              <div className="w-8 h-8 bg-slate-200 border border-white rounded-full overflow-hidden ring-1 ring-slate-200">
-                <img src="https://i.pravatar.cc/32?img=47" alt="" className="w-full h-full object-cover" />
-              </div>
-            </div>
-            <div className="text-sm text-slate-500">
-              <span className="font-semibold text-slate-700">2,847</span> MBAs learning this semester
-            </div>
+          <div className="mt-8 text-sm text-slate-500">
+            We'll break it down step-by-step, then you try it live.
           </div>
         </div>
 

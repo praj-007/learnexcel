@@ -10,7 +10,7 @@ export default function Navbar() {
     { href: '#why', label: 'Why Excel' },
     { href: '#curriculum', label: 'Curriculum' },
     { href: '#examples', label: 'Examples' },
-    { href: '#quizzes', label: 'Quizzes' },
+    { href: '/quizzes', label: 'Quizzes' },
     { 
       href: '#playground', 
       label: 'Playground', 

@@ -12,11 +12,35 @@ export interface ExampleChip {
   formula: string;
 }
 
+export interface LessonScenario {
+  id: string;
+  title: string;
+  context: string;           // The business situation
+  question: string;          // What the stakeholder actually needs
+  thinking: string[];        // Step-by-step "how a human thinks about this"
+  formula: string;
+  dataset: DatasetKey;
+  explanation: string;       // Why this formula works here
+}
+
+export interface LessonConcept {
+  name: string;
+  simple: string;            // "For dummies" explanation + analogy
+  whenToUse: string;
+  whenNot?: string;
+  syntaxBreakdown?: string;
+  basicExample?: string;
+}
+
 export interface Lesson {
   num: string;
   title: string;
-  content: string; // HTML string for simplicity (matches original)
-  tryFormulas?: Array<{ label: string; formula: string; ds?: DatasetKey }>;
+  objective: string;         // "By the end of this module you will be able to..."
+  whyItMatters: string;      // Real pain / career impact
+  concepts: LessonConcept[];
+  scenarios: LessonScenario[];
+  commonMistakes: string[];
+  practicePrompts: Array<{ label: string; formula: string; ds?: DatasetKey; hint?: string }>;
 }
 
 export interface QuizQuestion {
