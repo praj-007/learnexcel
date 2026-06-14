@@ -1,0 +1,153 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --primary: #0F172A;
+  --accent: #0D9488;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-space-grotesk);
+}
+
+.font-display {
+  font-family: var(--font-space-grotesk), 'Inter', system-ui, sans-serif;
+  font-weight: 600;
+}
+
+body {
+  font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+}
+
+/* Original prototype styles ported for fidelity */
+.nav-active {
+  color: #0D9488;
+  border-bottom: 2px solid #0D9488;
+}
+
+.excel-table {
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.excel-table th {
+  background-color: #0F172A;
+  color: white;
+  font-weight: 600;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.excel-table td {
+  border: 1px solid #CBD5E1;
+  padding: 6px 10px;
+  min-width: 90px;
+}
+
+.excel-table td[contenteditable="true"]:focus,
+.excel-table td input:focus {
+  outline: 2px solid #0D9488;
+  background-color: #F0FDFA;
+  box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1);
+}
+
+.formula-bar {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+.module-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.module-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+}
+
+.lesson-modal {
+  animation: fadeInScale 0.2s ease forwards;
+}
+
+@keyframes fadeInScale {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.nav-link {
+  transition: color 0.2s ease;
+}
+
+.nav-link:hover {
+  color: #0D9488;
+}
+
+.stat-number {
+  font-variant-numeric: tabular-nums;
+}
+
+.formula-pill {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.75rem;
+}
+
+.data-table-container {
+  max-height: 420px;
+  overflow: auto;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+}
+
+.section-header {
+  font-size: 1.75rem;
+  line-height: 1.1;
+  font-weight: 700;
+  color: #0F172A;
+}
+
+.accent-text {
+  color: #0D9488;
+}
+
+.playground-result {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.dataset-tab.active {
+  background-color: white;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.05);
+}
+
+/* Playground full focus mode */
+.full-playground .data-table-container {
+  max-height: 520px;
+}
+
+/* Nice focus for editable cells in React implementation */
+.playground-cell:focus-within {
+  background-color: #F0FDFA;
+}
+
+/* Modal styles */
+.modal {
+  animation: fadeInScale 0.2s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* Quiz cards */
+.quiz-card {
+  transition: all 0.2s ease;
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  .section-header {
+    font-size: 1.5rem;
+  }
+}
